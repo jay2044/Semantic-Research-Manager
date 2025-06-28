@@ -69,10 +69,10 @@ python main.py
 
 ### Relevance Categories
 
-- **Highly Relevant** (≥70%): Must-read papers closely aligned with your research
-- **Moderately Relevant** (50-69%): Worth reading if you have time
-- **Somewhat Relevant** (30-49%): May contain useful insights
-- **Low Relevance** (<30%): Can be safely skipped
+- **Highly Relevant** (≥85%): Must-read papers closely aligned with your research
+- **Moderately Relevant** (65-84%): Worth reading if you have time
+- **Somewhat Relevant** (45-64%): May contain useful insights
+- **Low Relevance** (<45%): Can be safely skipped
 
 ## Data Storage
 
