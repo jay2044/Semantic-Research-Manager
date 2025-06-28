@@ -1,0 +1,27 @@
+Our research project is dedicated to evaluating the depth and fidelity of Large Language Model (LLM) reasoning in the context of complex, real-world human planning and decision-making. The core objective is to move beyond outcome-based evaluation and instead benchmark the model's ability to replicate the *entire reasoning process* that precedes a formal plan. We aim to assess whether an LLM can surface constraints, estimate uncertainties, integrate domain-specific logic, and construct a coherent problem representation using only the information that was available to human decision-makers at the time.
+
+Key Research Interests:
+- Benchmarking the pre-planning, problem-framing capabilities of LLMs.
+- Replicating human-like reasoning processes in high-stakes, uncertain environments.
+- Automated identification of explicit and, crucially, implicit constraints from unstructured context.
+- Modeling and reasoning under uncertainty and incomplete information.
+- Ground truth extraction from historical, real-world decision scenarios (e.g., policy, engineering, crisis response).
+- Developing evaluation methodologies that prioritize the fidelity of the reasoning path over the correctness of the final decision.
+- Analyzing the gap between current LLM reasoning capabilities and the nuanced, multi-level logic of human experts.
+- Using a "protected corpus" of data not present in LLM training sets to ensure valid, uncontaminated evaluation.
+- The intersection of reasoning, planning, and world modeling in LLMs.
+
+We are particularly interested in:
+1.  **Data Sourcing & Curation:** Identifying and processing well-documented historical cases from domains like corporate strategy (e.g., bankruptcies, product launches), public policy, military planning, or legal judgments where the decision-making process is traceable through contemporaneous documents (memos, emails, meeting notes).
+2.  **Ground Truth Formulation:** Developing systematic methods to extract the "reasoning ground truth" from these cases, including the specific constraints, uncertainty factors, stakeholder perspectives, and logical trade-offs that influenced the human decision.
+3.  **Task Design:** Crafting evaluation scenarios that place the LLM in the role of the original decision-maker, providing it with the same limited, time-bound information and asking it to articulate its reasoning.
+4.  **Multi-Dimensional Evaluation Metrics:** Designing metrics that assess performance across several axes:
+    * **Comprehensiveness:** Did the model identify the key constraints and variables?
+    * **Depth of Reasoning:** Did it uncover second-order effects and implicit assumptions?
+    * **Contextual Fidelity:** Did its reasoning align with the decision-maker’s role, expertise, and available data, avoiding hindsight bias?
+    * **Justification Quality:** Was the logic sound, coherent, and grounded in the provided context?
+5.  **Failure Analysis:** Pinpointing exactly where and why an LLM's reasoning process diverges from a plausible or documented human reasoning path.
+6.  **Symbolic Representation:** Investigating whether an LLM can translate a complex, natural language scenario into a structured or symbolic representation of constraints and uncertainties that could then be passed to a formal solver.
+7.  **Multi-Actor Scenarios:** Evaluating the model's ability to synthesize or navigate the conflicting viewpoints and priorities of different actors within a single decision-making event.
+
+Our ultimate goal is to establish a rigorous, process-oriented benchmark for complex decision-making. This will allow us to understand the true capabilities and limitations of LLMs as potential assistants or autonomous agents in mission-critical roles, moving beyond simple task-completion metrics to assess the core cognitive work of strategic reasoning.
