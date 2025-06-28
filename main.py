@@ -55,36 +55,36 @@ def print_statistics(storage):
     """Print storage statistics at the top of the interface"""
     stats = storage.get_statistics()
     
-    print("📊 PAPER STATISTICS:")
-    print(f"📚 To Read: {stats['to_read_papers']} | 📖 Reading: {stats['reading_papers']} | ✅ Read: {stats['read_papers']} | ❌ Discarded: {stats['discarded_papers']}")
+    print("PAPER LIBRARY:")
+    to_read = stats['to_read_papers']
+    reading = stats['reading_papers'] 
+    read = stats['read_papers']
+    discarded = stats['discarded_papers']
+    
+    print(f"To Read: {to_read} | Reading: {reading} | Read: {read} | Discarded: {discarded}")
     
     if stats['total_papers'] > 0:
-        non_discarded = stats['to_read_papers'] + stats['reading_papers'] + stats['read_papers']
-        if non_discarded > 0:
-            completion_rate = (stats['read_papers'] / non_discarded) * 100
-            print(f"📈 Reading Progress: {completion_rate:.1f}% complete | 📄 PDFs: {len([p for p in storage.papers if p.get('pdf_path')])}")
+        pdfs = len([p for p in storage.papers if p.get('pdf_path')])
+        print(f"Total: {stats['total_papers']} papers | PDFs: {pdfs}")
     
     print("-" * 60)
 
 
 def print_menu():
     """Print the main menu options"""
-    print("📋 MAIN MENU:")
+    print("MAIN MENU:")
     print("1. Search and add from ArXiv")
-    print("2. Add paper manually (title + abstract)")
-    print("3. View all papers (ranked by relevance)")
-    print("4. View papers by status")
-    print("5. Search stored papers")
-    print("6. 🎯 Show top 10 papers to read next")
-    print("7. 🎲 Pick random paper to read")
-    print("8. 📖 Manage reading queue")
-    print("9. Open papers folder")
-    print("10. Manage research context")
-    print("11. Change embedding model")
-    print("12. Export papers")
-    print("13. Recalculate embeddings & relevance")
-    print("14. 📚 Mass add papers from ArXiv IDs")
-    print("15. Exit")
+    print("2. Add paper manually")
+    print("3. Mass add from ArXiv IDs")
+    print("4. View all papers")
+    print("5. View papers by status")
+    print("6. Search papers")
+    print("7. Top papers to read")
+    print("8. Random paper picker")
+    print("9. Reading queue")
+    print("10. Research context")
+    print("11. Settings")
+    print("12. Exit")
     print("-" * 60)
 
 
@@ -451,16 +451,16 @@ def display_papers_with_pagination(papers, title, storage, page_size=10):
         
         # Show pagination controls
         print("-" * 60)
-        print("📄 PAGINATION CONTROLS:")
+        print("NAVIGATION:")
         
         if total_pages > 1:
             if current_page > 1:
-                print("◀️  Previous page (p)")
+                print("Previous page (p)")
             if current_page < total_pages:
-                print("▶️  Next page (n)")
-            print(f"📄 Go to page (g1-{total_pages})")
+                print("Next page (n)")
+            print(f"Go to page (g1-{total_pages})")
         
-        print("📋 ACTIONS:")
+        print("ACTIONS:")
         print("1. View paper details")
         print("2. Change paper status")
         print("3. Delete paper")
@@ -479,7 +479,7 @@ def display_papers_with_pagination(papers, title, storage, page_size=10):
             if 1 <= page_num <= total_pages:
                 current_page = page_num
             else:
-                print("❌ Invalid page number.")
+                print("Invalid page number.")
                 input("Press Enter to continue...")
         elif choice.isdigit():
             # Handle actions
@@ -495,10 +495,10 @@ def display_papers_with_pagination(papers, title, storage, page_size=10):
             elif choice_num == 5:
                 return
             else:
-                print("❌ Invalid choice.")
+                print("Invalid choice.")
                 input("Press Enter to continue...")
         else:
-            print("❌ Invalid choice.")
+            print("Invalid choice.")
             input("Press Enter to continue...")
 
 
@@ -697,7 +697,7 @@ def view_papers_by_status(storage):
     clear_screen()
     print_header()
     print_statistics(storage)
-    print("📋 VIEW PAPERS BY STATUS")
+    print("VIEW PAPERS BY STATUS")
     print("-" * 60)
     
     # Show status options with counts
@@ -706,14 +706,7 @@ def view_papers_by_status(storage):
     
     for i, status in enumerate(valid_statuses, 1):
         count = len(storage.get_papers_by_status(status))
-        status_icon = {
-            "to read": "📚",
-            "reading": "📖", 
-            "read": "✅",
-            "discarded": "❌"
-        }.get(status, "📄")
-        
-        print(f"{i}. {status_icon} {status.title()} ({count} papers)")
+        print(f"{i}. {status.title()} ({count} papers)")
     
     print("5. All papers")
     print("6. Back to main menu")
@@ -731,10 +724,10 @@ def view_papers_by_status(storage):
         elif choice_num == 6:
             return
         else:
-            print("❌ Invalid choice.")
+            print("Invalid choice.")
             input("Press Enter to continue...")
     except ValueError:
-        print("❌ Please enter a valid number.")
+        print("Please enter a valid number.")
         input("Press Enter to continue...")
 
 
@@ -831,7 +824,7 @@ def _show_paper_details(paper):
     """Helper function to display detailed paper information"""
     clear_screen()
     print_header()
-    print("📄 PAPER DETAILS")
+    print("PAPER DETAILS")
     print("-" * 60)
     print(f"Title: {paper['title']}")
     print(f"ID: {paper['id']}")
@@ -887,17 +880,10 @@ def _change_paper_status_interactive(storage, paper):
     print("Select new status:")
     
     valid_statuses = storage.get_valid_statuses()
-    status_icons = {
-        "to read": "📚",
-        "reading": "📖", 
-        "read": "✅",
-        "discarded": "❌"
-    }
     
     for i, status in enumerate(valid_statuses, 1):
-        icon = status_icons.get(status, "📄")
         current_indicator = " (current)" if status == paper['status'] else ""
-        print(f"{i}. {icon} {status.title()}{current_indicator}")
+        print(f"{i}. {status.title()}{current_indicator}")
     
     choice = get_user_input(f"\nEnter choice (1-{len(valid_statuses)}): ")
     
@@ -907,13 +893,13 @@ def _change_paper_status_interactive(storage, paper):
             new_status = valid_statuses[choice_num - 1]
             if new_status != paper['status']:
                 storage.update_paper_status(paper['id'], new_status)
-                print(f"✅ Paper status updated to: {new_status}")
+                print(f"Paper status updated to: {new_status}")
             else:
-                print("📝 Status unchanged.")
+                print("Status unchanged.")
         else:
-            print("❌ Invalid choice.")
+            print("Invalid choice.")
     except ValueError:
-        print("❌ Please enter a valid number.")
+        print("Please enter a valid number.")
 
 
 def search_papers(storage):
@@ -921,20 +907,20 @@ def search_papers(storage):
     clear_screen()
     print_header()
     print_statistics(storage)
-    print("🔍 SEARCH STORED PAPERS")
+    print("SEARCH STORED PAPERS")
     print("-" * 60)
     
     query = get_user_input("Enter search term: ")
     
     if not query:
-        print("❌ Search term cannot be empty.")
+        print("Search term cannot be empty.")
         input("Press Enter to continue...")
         return
     
     results = storage.search_papers(query)
     
     if not results:
-        print(f"📝 No papers found matching '{query}'.")
+        print(f"No papers found matching '{query}'.")
         input("Press Enter to continue...")
         return
     
@@ -944,7 +930,7 @@ def search_papers(storage):
 def display_search_results_with_pagination(results, query, storage, page_size=10):
     """Display search results with pagination"""
     if not results:
-        print(f"📝 No papers found matching '{query}'.")
+        print(f"No papers found matching '{query}'.")
         input("Press Enter to continue...")
         return
     
@@ -956,7 +942,7 @@ def display_search_results_with_pagination(results, query, storage, page_size=10
         clear_screen()
         print_header()
         print_statistics(storage)
-        print("🔍 SEARCH RESULTS")
+        print("SEARCH RESULTS")
         print("-" * 60)
         
         # Calculate start and end indices for current page
@@ -970,17 +956,9 @@ def display_search_results_with_pagination(results, query, storage, page_size=10
         
         # Display papers for current page
         for i, paper in enumerate(current_papers, start_idx + 1):
-            # Use status icons
-            status_icons = {
-                "to read": "📚",
-                "reading": "📖", 
-                "read": "✅",
-                "discarded": "❌"
-            }
-            status_icon = status_icons.get(paper["status"], "📄")
-            pdf_icon = "📄" if paper.get('pdf_path') else "📝"
+            pdf_icon = "[PDF]" if paper.get('pdf_path') else ""
             
-            print(f"{i}. {status_icon}{pdf_icon} {paper['title'][:50]}...")
+            print(f"{i}. {pdf_icon} {paper['title'][:55]}...")
             print(f"   Relevance: {paper['relevance_score']:.2f}% - {paper['category']}")
             print(f"   Status: {paper['status']}")
             if paper.get('arxiv_id'):
@@ -991,16 +969,16 @@ def display_search_results_with_pagination(results, query, storage, page_size=10
         
         # Show pagination controls
         print("-" * 60)
-        print("📄 PAGINATION CONTROLS:")
+        print("NAVIGATION:")
         
         if total_pages > 1:
             if current_page > 1:
-                print("◀️  Previous page (p)")
+                print("Previous page (p)")
             if current_page < total_pages:
-                print("▶️  Next page (n)")
-            print(f"📄 Go to page (g1-{total_pages})")
+                print("Next page (n)")
+            print(f"Go to page (g1-{total_pages})")
         
-        print("📋 ACTIONS:")
+        print("ACTIONS:")
         print("1. Change paper status")
         print("2. Add/edit notes")
         print("3. View paper details")
@@ -1020,7 +998,7 @@ def display_search_results_with_pagination(results, query, storage, page_size=10
             if 1 <= page_num <= total_pages:
                 current_page = page_num
             else:
-                print("❌ Invalid page number.")
+                print("Invalid page number.")
                 input("Press Enter to continue...")
         elif choice.isdigit():
             # Handle actions
@@ -1038,10 +1016,10 @@ def display_search_results_with_pagination(results, query, storage, page_size=10
             elif choice_num == 6:
                 return
             else:
-                print("❌ Invalid choice.")
+                print("Invalid choice.")
                 input("Press Enter to continue...")
         else:
-            print("❌ Invalid choice.")
+            print("Invalid choice.")
             input("Press Enter to continue...")
 
 
@@ -2198,7 +2176,7 @@ def mass_add_papers(checker, storage):
     clear_screen()
     print_header()
     print_statistics(storage)
-    print("📚 MASS ADD PAPERS FROM ARXIV IDs")
+    print("MASS ADD PAPERS FROM ARXIV IDs")
     print("-" * 60)
     print("Enter ArXiv IDs separated by new lines (one per line).")
     print("Example:")
@@ -2221,11 +2199,11 @@ def mass_add_papers(checker, storage):
             arxiv_ids.append(clean_id)
     
     if not arxiv_ids:
-        print("❌ No ArXiv IDs provided.")
+        print("No ArXiv IDs provided.")
         input("Press Enter to continue...")
         return
     
-    print(f"\n📝 Found {len(arxiv_ids)} ArXiv IDs to process:")
+    print(f"\nFound {len(arxiv_ids)} ArXiv IDs to process:")
     for i, arxiv_id in enumerate(arxiv_ids, 1):
         print(f"  {i}. {arxiv_id}")
     
@@ -2243,7 +2221,7 @@ def mass_add_papers(checker, storage):
         'errors': []
     }
     
-    print(f"\n🔄 Processing {len(arxiv_ids)} papers...")
+    print(f"\nProcessing {len(arxiv_ids)} papers...")
     print("=" * 60)
     
     for i, arxiv_id in enumerate(arxiv_ids, 1):
@@ -2253,26 +2231,26 @@ def mass_add_papers(checker, storage):
             # Check if paper already exists
             if storage.paper_exists_by_arxiv_id(arxiv_id):
                 existing_paper = storage.get_paper_by_arxiv_id(arxiv_id)
-                print(f"  ⚠️  Already exists: {existing_paper['title'][:50]}...")
+                print(f"  Already exists: {existing_paper['title'][:50]}...")
                 results['skipped_existing'] += 1
                 continue
             
             # Fetch paper from ArXiv
-            print(f"  🔄 Fetching from ArXiv...")
+            print(f"  Fetching from ArXiv...")
             paper = arxiv.get_paper_by_id(arxiv_id)
             
             if not paper:
-                print(f"  ❌ Paper not found on ArXiv")
+                print(f"  Paper not found on ArXiv")
                 results['failed'] += 1
                 results['errors'].append(f"{arxiv_id}: Not found on ArXiv")
                 continue
             
             # Check relevance
-            print(f"  🧠 Analyzing relevance...")
+            print(f"  Analyzing relevance...")
             result = checker.check_paper_relevance(paper['title'], paper['abstract'])
             
             # Store paper
-            print(f"  💾 Storing paper...")
+            print(f"  Storing paper...")
             enhanced_data = {
                 'title': paper['title'],
                 'abstract': paper['abstract'],
@@ -2300,7 +2278,7 @@ def mass_add_papers(checker, storage):
                 storage._save_papers()
             
             # Download PDF
-            print(f"  📄 Downloading PDF...")
+            print(f"  Downloading PDF...")
             try:
                 folder_path = get_folder_for_relevance(enhanced_data['relevance_score'])
                 pdf_path = arxiv.download_pdf(enhanced_data['arxiv_id'], enhanced_data['title'], folder_path)
@@ -2308,38 +2286,38 @@ def mass_add_papers(checker, storage):
                 if pdf_path and stored_paper:
                     stored_paper['pdf_path'] = pdf_path
                     storage._save_papers()
-                    print(f"  ✅ PDF saved")
+                    print(f"  PDF saved")
                 else:
-                    print(f"  ⚠️  PDF download failed")
+                    print(f"  PDF download failed")
                     
             except Exception as e:
-                print(f"  ⚠️  PDF download failed: {e}")
+                print(f"  PDF download failed: {e}")
             
-            print(f"  ✅ Added: {paper['title'][:50]}... (Relevance: {result['relevance_score']:.1f}%)")
+            print(f"  Added: {paper['title'][:50]}... (Relevance: {result['relevance_score']:.1f}%)")
             results['added'] += 1
             
         except Exception as e:
-            print(f"  ❌ Error processing {arxiv_id}: {e}")
+            print(f"  Error processing {arxiv_id}: {e}")
             results['failed'] += 1
             results['errors'].append(f"{arxiv_id}: {str(e)}")
     
     # Show final results
     print("\n" + "=" * 60)
-    print("📊 MASS ADD RESULTS:")
+    print("MASS ADD RESULTS:")
     print("=" * 60)
-    print(f"✅ Successfully added: {results['added']} papers")
-    print(f"⚠️  Skipped (already exist): {results['skipped_existing']} papers")
-    print(f"❌ Failed: {results['failed']} papers")
+    print(f"Successfully added: {results['added']} papers")
+    print(f"Skipped (already exist): {results['skipped_existing']} papers")
+    print(f"Failed: {results['failed']} papers")
     
     if results['errors']:
-        print(f"\n❌ Errors encountered:")
+        print(f"\nErrors encountered:")
         for error in results['errors']:
             print(f"   • {error}")
     
     if results['added'] > 0:
-        print(f"\n✅ {results['added']} new papers added to your library!")
-        print("   All papers are set to 'to read' status.")
-        print("   Use option 6 to see your top papers to read next.")
+        print(f"\n{results['added']} new papers added to your library!")
+        print("All papers are set to 'to read' status.")
+        print("Use 'Top papers to read' to see your highest priority papers.")
     
     input("\nPress Enter to continue...")
 
@@ -2349,21 +2327,21 @@ def enhanced_embedding_update_menu(checker, storage):
     clear_screen()
     print_header()
     print_statistics(storage)
-    print("🔄 ENHANCED EMBEDDING & RELEVANCE UPDATE")
+    print("ENHANCED EMBEDDING & RELEVANCE UPDATE")
     print("-" * 60)
     
     # Get papers that need embedding updates
     papers_needing_update = storage.get_papers_needing_embedding_update()
     total_papers = len(storage.papers)
     
-    print(f"📊 Current Status:")
+    print(f"Current Status:")
     print(f"Total papers: {total_papers}")
     print(f"Papers with notes needing embedding update: {len(papers_needing_update)}")
     print(f"Research context snippets: {len(checker.context_snippets) if hasattr(checker, 'context_snippets') else 0}")
     
     if not checker.context_text:
-        print("❌ No research context loaded.")
-        print("   Please load a research context first using 'Manage research context'.")
+        print("No research context loaded.")
+        print("Please load a research context first using 'Research context'.")
         input("Press Enter to continue...")
         return
     
@@ -2381,33 +2359,33 @@ def enhanced_embedding_update_menu(checker, storage):
     confirm = get_user_input("Are you sure you want to proceed? (Y/n): ")
     
     if confirm.lower() != 'y':
-        print("❌ Update cancelled.")
+        print("Update cancelled.")
         input("Press Enter to continue...")
         return
     
     try:
         # Step 1: Recalculate context embeddings
-        print("\n🔄 Step 1: Recalculating enhanced context embeddings...")
+        print("\nStep 1: Recalculating enhanced context embeddings...")
         if hasattr(checker, '_extract_base_context'):
             base_context = checker._extract_base_context()
             checker.context_text = checker._build_enhanced_context(base_context)
         checker.context_embedding = checker._encode_text(checker.context_text)
-        print("✅ Enhanced context embeddings recalculated!")
+        print("Enhanced context embeddings recalculated!")
         
         # Step 2: Update paper embeddings with notes
-        print("\n🔄 Step 2: Updating paper embeddings with notes...")
+        print("\nStep 2: Updating paper embeddings with notes...")
         embedding_stats = storage.batch_update_embeddings_with_notes(checker)
-        print(f"✅ Updated embeddings for {embedding_stats['updated_count']} papers")
+        print(f"Updated embeddings for {embedding_stats['updated_count']} papers")
         if embedding_stats['error_count'] > 0:
-            print(f"⚠️  {embedding_stats['error_count']} papers had errors")
+            print(f"{embedding_stats['error_count']} papers had errors")
         
         # Step 3: Recalculate all relevance scores
-        print("\n🔄 Step 3: Recalculating relevance scores with enhanced context...")
+        print("\nStep 3: Recalculating relevance scores with enhanced context...")
         relevance_stats = storage.recalculate_all_relevance_scores(checker)
         
         # Step 4: Show summary
         print("\n" + "="*60)
-        print("📊 ENHANCED UPDATE SUMMARY")
+        print("ENHANCED UPDATE SUMMARY")
         print("="*60)
         print(f"Total papers processed: {relevance_stats['total_papers']}")
         print(f"Papers with embedding updates: {embedding_stats['updated_count']}")
@@ -2416,20 +2394,63 @@ def enhanced_embedding_update_menu(checker, storage):
         print(f"Errors: {relevance_stats['error_papers'] + embedding_stats['error_count']}")
         
         if embedding_stats['updated_count'] > 0:
-            print(f"\n✅ Successfully integrated notes into {embedding_stats['updated_count']} paper embeddings!")
+            print(f"\nSuccessfully integrated notes into {embedding_stats['updated_count']} paper embeddings!")
         
         if relevance_stats['updated_papers'] > 0:
-            print(f"✅ Updated relevance scores for {relevance_stats['updated_papers']} papers!")
+            print(f"Updated relevance scores for {relevance_stats['updated_papers']} papers!")
         
-        print("\n💡 Tip: Papers with notes now have enhanced semantic relevance scoring!")
+        print("\nTip: Papers with notes now have enhanced semantic relevance scoring!")
         
     except Exception as e:
-        print(f"\n❌ Error during enhanced update: {e}")
+        print(f"\nError during enhanced update: {e}")
         print("Please try again or contact support.")
         import traceback
         print(f"Debug info: {traceback.format_exc()}")
     
     input("\nPress Enter to continue...")
+
+
+def settings_menu(checker, storage):
+    """Settings and advanced options submenu"""
+    while True:
+        clear_screen()
+        print_header()
+        print_statistics(storage)
+        print("SETTINGS")
+        print("-" * 60)
+        
+        current_model = getattr(checker, 'model_name', 'allenai/specter2')
+        current_file = getattr(checker, '_context_file', 'research_context.txt')
+        
+        print(f"Current embedding model: {current_model}")
+        print(f"Current context file: {current_file}")
+        print()
+        
+        print("1. Change embedding model")
+        print("2. Export papers")
+        print("3. Recalculate embeddings & relevance")
+        print("4. Open papers folder")
+        print("5. View statistics")
+        print("6. Back to main menu")
+        print("-" * 60)
+        
+        choice = get_user_input("Enter your choice (1-6): ")
+        
+        if choice == '1':
+            change_model(checker)
+        elif choice == '2':
+            export_papers(storage)
+        elif choice == '3':
+            enhanced_embedding_update_menu(checker, storage)
+        elif choice == '4':
+            open_papers_folder()
+        elif choice == '5':
+            view_statistics(storage)
+        elif choice == '6':
+            break
+        else:
+            print("Invalid choice. Please enter 1-6.")
+            input("Press Enter to continue...")
 
 
 def main():
@@ -2459,41 +2480,35 @@ def main():
             
             print_menu()
             
-            choice = get_user_input("Enter your choice (1-15): ")
+            choice = get_user_input("Enter your choice (1-12): ")
             
             if choice == '1':
                 search_arxiv_papers(checker, storage)
             elif choice == '2':
                 add_manual_paper(checker, storage)
             elif choice == '3':
-                view_all_papers(storage)
+                mass_add_papers(checker, storage)
             elif choice == '4':
-                view_papers_by_status(storage)
+                view_all_papers(storage)
             elif choice == '5':
-                search_papers(storage)
+                view_papers_by_status(storage)
             elif choice == '6':
-                show_top_papers_to_read(storage)
+                search_papers(storage)
             elif choice == '7':
-                pick_random_paper_to_read(storage)
+                show_top_papers_to_read(storage)
             elif choice == '8':
-                manage_reading_queue(storage)
+                pick_random_paper_to_read(storage)
             elif choice == '9':
-                open_papers_folder()
+                manage_reading_queue(storage)
             elif choice == '10':
                 manage_research_context(checker)
             elif choice == '11':
-                change_model(checker)
+                settings_menu(checker, storage)
             elif choice == '12':
-                export_papers(storage)
-            elif choice == '13':
-                enhanced_embedding_update_menu(checker, storage)
-            elif choice == '14':
-                mass_add_papers(checker, storage)
-            elif choice == '15':
-                print("\n👋 Bye! ~ Semantic Research Manager")
+                print("\nBye! ~ Semantic Research Manager")
                 break
             else:
-                print("❌ Invalid choice. Please enter 1-15.")
+                print("Invalid choice. Please enter 1-12.")
                 input("Press Enter to continue...")
                 
     except KeyboardInterrupt:
